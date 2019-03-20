@@ -1,20 +1,25 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { fetchStream } from '../../actions';
 
-const StreamEdit = (props) => {
-    console.log(props)
-    return <div>StreamEdit</div>;
+class StreamEdit extends React.Component {
+
+    componentDidMount() {
+        this.props.fetchStream(this.props.match.params.id);
+    }
+
+    render() {
+        if (!this.props.stream) {
+            return <div>Loading...</div>
+        }
+        return <div>{this.props.stream.title}</div>;
+    }
 }
 
 const mapStateToProps = (state, ownProps) => {
     return {
         stream: state.streams[ownProps.match.params.id]
-        // With React-Router each component needs to be designed
-        // to work in isolation (fetch its own data!)
-        // So now, if we will open link directly
-        // We can`t receive this stream data
-        // Because StreamList component don`t loaded it yet
     }
 }
 
-export default connect(mapStateToProps)(StreamEdit);
+export default connect(mapStateToProps, { fetchStream })(StreamEdit);
